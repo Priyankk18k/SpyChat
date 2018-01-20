@@ -13,18 +13,20 @@ def start_chat(spy_name,spy_age, spy_rating):
     # Showing  whether the authentication is complete or not.
 
      menu_choice = "What do you want to do ?\n 1-ADD a Status Update\n 2-QUIT"
+     # Choice of input
      menu_choice = input(menu_choice)
      if menu_choice == 1:
          print("Status is updated")
      else:
          pass
-
+      # Exit the code
 
 
     else:
      print 'Sorry you are not of the correct age to be a spy'
 if existing == "Y":
     start_chat(spy_name,spy_age, spy_rating)
+    # Starting the Chat Application
 else:
     spy_name = ''
     spy_salutation = ''
@@ -34,6 +36,7 @@ else:
     spy_name = raw_input("Welcome to spy chat, you must tell me your spy name first: ")
 
     if len(spy_name) > 0:
+
         spy_salutation = raw_input("Should I call you Mr. or Ms.?: ")
 
         spy_age = input("What is your age?")
@@ -41,6 +44,7 @@ else:
         spy_rating = input("What is your spy rating?")
 
         spy_is_online = True
+        # Updating the values in the above else part
         start_chat(spy_name, spy_age, spy_rating)
 
     else:
