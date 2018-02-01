@@ -47,22 +47,20 @@ def add_status(current_status_message):
 def select_a_friend():
     item_no=0
     for friend in friends:
-        print '%d. %s aged %d with rating %.2f is online' % (item_no + 1, friend['name'],
-                                                             friend['age'],
-                                                             friend['rating'])
+        print '%d. %s %s aged %d with rating %.2f is online' % (item_no + 1, friend.salutation, friend.name,
+                                                                friend.age,
+                                                                friend.rating)
         item_no = item_no + 1
-
-        friend_choice = raw_input("Choose friend from list?")
-        friend_choice_position = int(friend_choice) - 1
-        return friend_choice_position
-
+    friend_choice=raw_input("choose friend from list.")
+    friend_choice_position=int(friend_choice)-1
+    return friend_choice_position
 def send_message():
 
     friend_choice = select_a_friend()
 
-    original_image = input("What is the name of the image?")
+    original_image = raw_input("What is the name of the image?")
     output_path = "output.jpg"
-    text = input("What do you want to say? ")
+    text = raw_input("What do you want to say? ")
     Steganography.encode(original_image, output_path, text)
 
     new_chat = {
@@ -80,7 +78,7 @@ def read_message():
 
     sender = select_a_friend()
 
-    output_path = input("What is the name of the file?")
+    output_path = raw_input("What is the name of the file?")
 
     secret_text = Steganography.decode(output_path)
 
@@ -138,9 +136,9 @@ def start_chat(spy):
         elif menu_choice == 2:
             number_of_friends = add_friend()
             print 'You have %d friends' % (number_of_friends)
-        elif menu_choice== 3:
+        elif menu_choice == 3:
             send_message()
-        elif menu_choice==4:
+        elif menu_choice ==4:
             read_message()
         else:
             show_menu=False
