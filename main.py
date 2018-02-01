@@ -1,4 +1,6 @@
 from spy_details import spy
+from steganography.steganography import Steganography
+from datetime import datetime
 STATUS_MESSAGES = ['My name is Bond, James Bond', 'Shaken, not stirred.', 'Keeping the British end up, Sir']
 # Default status message which will show to the user.
 friends= []
@@ -42,15 +44,57 @@ def add_status(current_status_message):
     return updated_status_message
 # selection function
 #By this function we select a friend from friend list for performing a various function on selecting friend
-def select_friend():
+def select_a_friend():
     item_no=0
     for friend in friends:
-        print '%d. %s %s aged %d with rating %.2f is online' % ((item_no + 1),friend['name'])
+        print '%d. %s aged %d with rating %.2f is online' % (item_no + 1, friend['name'],
+                                                             friend['age'],
+                                                             friend['rating'])
         item_no = item_no + 1
-        updated_item_no=item_no-1
+
         friend_choice = raw_input("Choose friend from list?")
         friend_choice_position = int(friend_choice) - 1
         return friend_choice_position
+
+def send_message():
+
+    friend_choice = select_a_friend()
+
+    original_image = input("What is the name of the image?")
+    output_path = "output.jpg"
+    text = input("What do you want to say? ")
+    Steganography.encode(original_image, output_path, text)
+
+    new_chat = {
+        "message": text,
+        "time": datetime.now(),
+        "sent_by_me": True
+    }
+
+    friends[friend_choice]['chats'].append(new_chat)
+
+    print "Your secret message image is ready!"
+
+
+def read_message():
+
+    sender = select_a_friend()
+
+    output_path = input("What is the name of the file?")
+
+    secret_text = Steganography.decode(output_path)
+
+    new_chat = {
+        "message": secret_text,
+        "time": datetime.now(),
+        "sent_by_me": False
+    }
+
+    friends[sender]['chats'].append(new_chat)
+
+    print "Your secret message has been saved!"
+
+
 # This function add the new friend in the friend list
 def add_friend():
     new_friend={
@@ -94,12 +138,16 @@ def start_chat(spy):
         elif menu_choice == 2:
             number_of_friends = add_friend()
             print 'You have %d friends' % (number_of_friends)
+        elif menu_choice== 3:
+            send_message()
+        elif menu_choice==4:
+            read_message()
         else:
-            show_menu = False
+            show_menu=False
     else:
         print 'Sorry you are not of the correct age to be a spy'
 
-if existing == "Y":
+if existing.upper() == "Y":
     start_chat(spy)
 else:
     spy = {
