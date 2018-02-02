@@ -1,9 +1,8 @@
-from spy_details import spy
+from spy_details import spy,friends
 from steganography.steganography import Steganography
 from datetime import datetime
 STATUS_MESSAGES = ['My name is Bond, James Bond', 'Shaken, not stirred.', 'Keeping the British end up, Sir']
 # Default status message which will show to the user.
-friends= []
 # Default empty entry of friend details
 print 'Hello,Let\'s get started'
 
@@ -45,14 +44,18 @@ def add_status(current_status_message):
 # selection function
 #By this function we select a friend from friend list for performing a various function on selecting friend
 def select_a_friend():
-    item_no=0
+    item_number = 0
+
     for friend in friends:
-        print '%d. %s %s aged %d with rating %.2f is online' % (item_no + 1, friend.salutation, friend.name,
-                                                                friend.age,
-                                                                friend.rating)
-        item_no = item_no + 1
-    friend_choice=raw_input("choose friend from list.")
-    friend_choice_position=int(friend_choice)-1
+        print '%d. %s aged %d with rating %.2f is online' % (item_number +1, friend['name'],
+                                                   friend['age'],
+                                                   friend['rating'])
+        item_number = item_number + 1
+
+    friend_choice = input("Choose from your friends")
+
+    friend_choice_position = int(friend_choice) - 1
+
     return friend_choice_position
 def send_message():
 
@@ -138,7 +141,7 @@ def start_chat(spy):
             print 'You have %d friends' % (number_of_friends)
         elif menu_choice == 3:
             send_message()
-        elif menu_choice ==4:
+        elif menu_choice == 4:
             read_message()
         else:
             show_menu=False
