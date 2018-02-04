@@ -1,14 +1,19 @@
 from spy_details import spy,friends,Spy,Chatmessage
 from steganography.steganography import Steganography
 from datetime import datetime
-STATUS_MESSAGES = ['My name is Bond, James Bond', 'Shaken, not stirred.', 'Keeping the British end up, Sir']
+import csv
+from termcolor import colored
+
+STATUS_MESSAGES = ["Available","busy","At Work"]
 # Default status message which will show to the user.
 # Default empty entry of friend details
 print 'Hello,Let\'s get started'
 
 print"Welcome to SpyChat"
+
 question="Do you want to continue as " + spy.salutation + " " + spy.name + " (Y/N)? "
 existing=raw_input(question)
+
 def add_status(current_status_message):
     updated_status_message = None
     if current_status_message != None:
@@ -43,6 +48,7 @@ def add_status(current_status_message):
     return updated_status_message
 # selection function
 #By this function we select a friend from friend list for performing a various function on selecting friend
+
 def select_a_friend():
     item_number = 0
 
@@ -57,6 +63,7 @@ def select_a_friend():
     friend_choice_position = int(friend_choice) - 1
 
     return friend_choice_position
+
 def send_message():
 
     friend_choice = select_a_friend()
@@ -77,6 +84,7 @@ def send_message():
     print "Your secret message image is ready!"
 
 
+
 def read_message():
 
     sender = select_a_friend()
@@ -95,6 +103,38 @@ def read_message():
 
     print "Your secret message has been saved!"
 
+def read_chat_history():
+   read_for = select_a_friend()
+   if len(friends[read_for].chats) > 0:
+       for chat in friends[read_for].chats:
+           b=colored(chat.time.strftime('%A,%d %B %Y %H:%M:%S'),'blue')
+
+           if chat.sent_by_me:
+               print'[%s] %s: %s' % (b,'you said:',chat.message)
+           else:
+               print '[%s] %s read:%s'%(b,friends[read_for].name,chat.message)
+   else:
+        print " There is no chat history "
+
+#Function to load the friends
+def loadFriends():
+    with open("friends.csv", "rb") as friends_list:   #open the csv file as friends_data in read mode
+        reader = list(csv.reader(friends_list))        #convert each line into list
+
+
+        for row in reader[1:]:
+           print(row)
+        friends.append(spy)
+
+def loadMessage():
+    with open("chats.csv", "rb") as chat_box:
+        reader = list(csv.reader(chat_box))
+
+        for row in reader[1:]:
+            chatDetails = Chatmessage(row[1], row[2])
+            spy.chats.append(chatDetails)
+            print"Messages loaded successfully"
+
 
 # This function add the new friend in the friend list
 def add_friend():
@@ -108,8 +148,11 @@ def add_friend():
 
     new_friend.age = input("Age?")
     new_friend.rating = input("Spy rating?")
-    if len(new_friend.name) > 0 and  new_friend.age > 12 and new_friend.rating >= spy.rating:
+    if len(new_friend.name) > 0 and  new_friend.age > 12 and new_friend.age <50 and new_friend.rating >= spy.rating:
         friends.append(new_friend)
+        with open("friends.csv", "a") as friends_data:
+            writer = csv.writer(friends_data)
+            writer.writerow([new_friend.name, new_friend.salutation, new_friend.age, new_friend.rating, True])
 
         # Assigning the values of the new friend to the new friends function.
         print "%s %s is now your friend" % (new_friend.salutation, new_friend.name)
@@ -118,8 +161,13 @@ def add_friend():
 
     return len(friends)
 
+
 def start_chat(spy):
     current_status_message = None
+    loadFriends()
+    loadMessage()
+
+
     spy.name = spy.salutation + " " + spy.name
     if spy.age > 12 and spy.age< 50:
      print "Authentication complete. Welcome %s  age:%d    and rating of: %.2f   Proud to have you onboard" % (spy.name, spy.age, spy.rating)
@@ -139,6 +187,8 @@ def start_chat(spy):
             send_message()
         elif menu_choice == 4:
             read_message()
+        elif menu_choice == 5:
+            read_chat_history()
         else:
             show_menu=False
     else:
