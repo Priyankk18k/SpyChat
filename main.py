@@ -1,8 +1,8 @@
-from spy_details import spy,friends,Spy,Chatmessage
-from steganography.steganography import Steganography
+from spy_details import spy,friends,Spy,Chatmessage       # from spy_details.py we are importing some classes and functions
+from steganography.steganography import Steganography    # importing Steganography funcntion from steganogarphy for hiding text into the images
 from datetime import datetime
 import csv
-from termcolor import colored
+from termcolor import colored                 # importing termcolor for text formatting
 
 STATUS_MESSAGES = ["Available","busy","At Work"]
 # Default status message which will show to the user.
@@ -11,7 +11,7 @@ print 'Hello,Let\'s get started'
 
 print"Welcome to SpyChat"
 
-question="Do you want to continue as " + spy.salutation + " " + spy.name + " (Y/N)? "
+question="Do you want to continue as " + colored(spy.salutation,'red') + " " + colored(spy.name,'red') + " (Y/N)? "
 existing=raw_input(question)
 
 def add_status(current_status_message):
@@ -71,6 +71,8 @@ def send_message():
     original_image = raw_input("What is the name of the image?")
     output_path = "output.jpg"
     text = raw_input("What do you want to say? ")
+    if text.upper()=="SOS" or text.upper()=="HELP" or text.upper()=="End" or text.upper()=="SAVE ME":
+        print"THIS IS AN EMERGENCY, SEND A VALID REPLY"
     Steganography.encode(original_image, output_path, text)
 
     new_chat = {
@@ -110,9 +112,9 @@ def read_chat_history():
            b=colored(chat.time.strftime('%A,%d %B %Y %H:%M:%S'),'blue')
 
            if chat.sent_by_me:
-               print'[%s] %s: %s' % (b,'you said:',chat.message)
+               print'[%s] %s: %s' % (b,'you said:','Black'+chat.message)
            else:
-               print '[%s] %s read:%s'%(b,friends[read_for].name,chat.message)
+               print '[%s] %s read:%s'%(b,friends[read_for].name,'Black'+chat.message)
    else:
         print " There is no chat history "
 
@@ -130,9 +132,10 @@ def loadMessage():
     with open("chats.csv", "rb") as chat_box:
         reader = list(csv.reader(chat_box))
 
-        for row in reader[1:]:
-            chatDetails = Chatmessage(row[1], row[2])
-            spy.chats.append(chatDetails)
+        for row in reader:
+            print row
+            #chatDetails = Chatmessage(row[0],row[1])
+            spy.chats.append(row)
             print"Messages loaded successfully"
 
 
@@ -170,7 +173,7 @@ def start_chat(spy):
 
     spy.name = spy.salutation + " " + spy.name
     if spy.age > 12 and spy.age< 50:
-     print "Authentication complete. Welcome %s  age:%d    and rating of: %.2f   Proud to have you onboard" % (spy.name, spy.age, spy.rating)
+     print "Authentication complete. Welcome %s  age:%d    and rating of: %.2f   Proud to have you onboard" % (colored(spy.name,'red'), spy.age, spy.rating)
     # Showing  whether the authentication is complete or not.
      show_menu = True
      while show_menu:
@@ -215,6 +218,3 @@ else:
         start_chat(spy)
     else:
         print 'Please add a valid spy name'
-
-
-
